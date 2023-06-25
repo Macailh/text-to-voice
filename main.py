@@ -5,6 +5,7 @@ from gtts import gTTS
 app = typer.Typer()
 
 
+@app.command()
 def convert(txt_file: str, audio_name: str):
     try:
         archivo = open(txt_file + ".txt", "r", encoding="utf-8")
@@ -22,14 +23,5 @@ def convert(txt_file: str, audio_name: str):
     typer.echo("Audio generado correctamente")
 
 
-@app.command()
-def main(txt_file: str, audio_name: str):
-    convert(txt_file, audio_name)
-
-
-def run():
-    app()
-
-
 if __name__ == "__main__":
-    run()
+    app()
