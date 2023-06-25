@@ -1,19 +1,35 @@
+import typer
 from gtts import gTTS
 
 
-txt_file = input("Ingrese el nombre del archivo de texto: ")
+app = typer.Typer()
 
-try:
-    archivo = open(txt_file + ".txt", "r", encoding="utf-8")
-    texto = archivo.read()
-    archivo.close()
-except FileNotFoundError:
-    print("ERROR: No se pudo abrir el archivo de texto")
-    print("Verifique que el archivo se encuentre en la misma carpeta que el programa")
-    print("saliendo...")
-    exit()
 
-audio_name = input("Ingrese el nombre que tendra el archivo de audio final: ")
+def convert(txt_file: str, audio_name: str):
+    try:
+        archivo = open(txt_file + ".txt", "r", encoding="utf-8")
+        texto = archivo.read()
+        archivo.close()
+    except FileNotFoundError as exc:
+        typer.echo("ERROR: No se pudo abrir el archivo de texto")
+        typer.echo(
+            "Verifique que el archivo se encuentre en la misma carpeta que el programa")
+        typer.echo("saliendo...")
+        raise typer.Exit() from exc
 
-tts = gTTS(text=texto, lang="es")
-tts.save(audio_name + ".mp3")
+    tts = gTTS(text=texto, lang="es")
+    tts.save(audio_name + ".mp3")
+    typer.echo("Audio generado correctamente")
+
+
+@app.command()
+def main(txt_file: str, audio_name: str):
+    convert(txt_file, audio_name)
+
+
+def run():
+    app()
+
+
+if __name__ == "__main__":
+    run()
